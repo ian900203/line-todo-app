@@ -1,37 +1,16 @@
-export const config = {
-  api: {
-    bodyParser: false // LINE 需要 raw body
-  }
-};
-
-import { Readable } from 'stream';
-
-async function getRawBody(req) {
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks).toString('utf-8');
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).send('Method Not Allowed');
+    return res.status(405).end(); // Method Not Allowed
   }
 
-  const rawBody = await getRawBody(req);
-  const body = JSON.parse(rawBody);
-  const events = body.events || [];
-  const event = events[0]; // 只處理第一個事件
+  const events = req.body.events;
+  const replyToken = events?.[0]?.replyToken;
+  const eventType = events?.[0]?.type;
+  const userMessage = events?.[0]?.message?.text;
 
-  if (!event) return res.status(200).send('No event');
-
-  const replyToken = event.replyToken;
-  const eventType = event.type;
-
-  // 處理使用者剛加入好友
+  // 處理加入好友事件
   if (eventType === 'follow') {
-    const message = {
+    const flexMessage = {
       replyToken,
       messages: [
         {
@@ -96,15 +75,31 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`
       },
-      body: JSON.stringify(message)
+      body: JSON.stringify(flexMessage)
     });
-
-    return res.status(200).send('Flex message sent');
   }
 
-  // 其他事件回應
-  return res.status(200).json({
-    reply: 'Webhook received!',
-    received: events
-  });
+  // 處理訊息事件
+  if (eventType === 'message') {
+    const reply = {
+      replyToken,
+      messages: [
+        {
+          type: 'text',
+          text: `你說的是：「${userMessage}」對吧？喵～`
+        }
+      ]
+    };
+
+    await fetch('https://api.line.me/v2/bot/message/reply', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`
+      },
+      body: JSON.stringify(reply)
+    });
+  }
+
+  res.status(200).end();
 }
