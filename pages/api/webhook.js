@@ -1,9 +1,22 @@
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).end(); // Method Not Allowed
   }
 
-  const events = req.body.events;
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(chunk);
+  }
+  const rawBody = Buffer.concat(chunks).toString('utf-8');
+  const body = JSON.parse(rawBody);
+
+  const events = body.events;
   const replyToken = events?.[0]?.replyToken;
   const eventType = events?.[0]?.type;
   const userMessage = events?.[0]?.message?.text;
@@ -103,8 +116,3 @@ export default async function handler(req, res) {
 
   res.status(200).end();
 }
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
