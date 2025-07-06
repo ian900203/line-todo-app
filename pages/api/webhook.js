@@ -81,3 +81,17 @@ export default async function handler(req, res) {
   
     res.status(200).end();
   }
+  export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+      return res.status(405).send('Method Not Allowed');
+    }
+  
+    // 這裡處理 LINE 傳進來的訊息
+    const events = req.body.events;
+  
+    // 你可以回覆確認用訊息（測試用）
+    return res.status(200).json({
+      reply: 'Webhook received!',
+      received: events
+    });
+  }
