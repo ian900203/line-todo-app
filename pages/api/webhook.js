@@ -103,3 +103,11 @@ export default async function handler(req, res) {
 
   res.status(200).end();
 }
+git add pages/api/webhook.js
+git commit -m "fix: 更新 webhook 處理邏輯"
+git push
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
