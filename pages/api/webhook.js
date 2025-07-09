@@ -100,6 +100,75 @@ export default async function handler(req, res) {
         {
           type: 'text',
           text: `你說的是：「${userMessage}」對吧？喵～`
+        },
+        {
+          type: "flex",
+          altText: "功能選單",
+          contents: {
+            type: "carousel",
+            contents: [
+              {
+                type: "bubble",
+                size: "micro",
+                body: {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "button",
+                      action: {
+                        type: "message",
+                        label: "明細",
+                        text: "明細"
+                      },
+                      style: "primary",
+                      color: "#001F54"
+                    }
+                  ]
+                }
+              },
+              {
+                type: "bubble",
+                size: "micro",
+                body: {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "button",
+                      action: {
+                        type: "message",
+                        label: "分析",
+                        text: "分析"
+                      },
+                      style: "primary",
+                      color: "#001F54"
+                    }
+                  ]
+                }
+              },
+              {
+                type: "bubble",
+                size: "micro",
+                body: {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "button",
+                      action: {
+                        type: "message",
+                        label: "我的",
+                        text: "我的"
+                      },
+                      style: "primary",
+                      color: "#001F54"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
         }
       ]
     };

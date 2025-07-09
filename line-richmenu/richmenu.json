@@ -1,0 +1,47 @@
+{
+  "size": {
+    "width": 1200,
+    "height": 405
+  },
+  "selected": true,
+  "name": "主選單",
+  "chatBarText": "打開選單",
+  "areas": [
+    {
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 400,
+        "height": 405
+      },
+      "action": {
+        "type": "uri",
+        "uri": "https://line-todo-app-gold.vercel.app"
+      }
+    },
+    {
+      "bounds": {
+        "x": 400,
+        "y": 0,
+        "width": 400,
+        "height": 405
+      },
+      "action": {
+        "type": "message",
+        "text": "新增待辦"
+      }
+    },
+    {
+      "bounds": {
+        "x": 800,
+        "y": 0,
+        "width": 400,
+        "height": 405
+      },
+      "action": {
+        "type": "message",
+        "text": "設定提醒"
+      }
+    }
+  ]
+}
